@@ -1,0 +1,5 @@
+name = "Viewport Class"
+description = "jQuery plugin registers an element to receive classes relating to viewport changes with optional callback."
+version = 0.0.1
+homepage = http://www.intheloftstudios.com/packages/jquery/jquery.viewport_class
+author = Aaron Klump <sourcecode@intheloftstudios.com>
