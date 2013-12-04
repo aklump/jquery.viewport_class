@@ -4,6 +4,14 @@
   <title>Demo of jquery.viewport_class.js</title>
   <script src="externs/jquery-1.4.4.min.js"></script>
   <script src="jquery.viewport_class.js"></script>
+  <style type="text/css" media="all">
+    @import url("css/bootstrap.min.css");
+  </style> 
+  <style type="text/css" media="all">
+    .info {
+      color: red;
+    }
+  </style>
   <script>
   (function($) {
     $('document').ready(function(){
@@ -20,18 +28,25 @@
     });
   })(jQuery);
   </script>
-  <style type="text/css" media="all">
-    .info {
-      color: red;
-    }
-  </style>
 </head>
 <body>
-  <h1>Demo of jquery.viewport_class.js</h1>
-  <ol><li>Reize your browser window to see the viewport change callback fire.</li>
-    <li>Inspect the h1 element and notice the class changes to match the viewport.</li></ol>
-  
-  <h2>Callback Output</h2>
-  <div id="updates"></div>
+  <div class="container">
+    <h1>Demo of <!--$web_package_name-->Viewport Class<!--/$web_package_name--> <small>jquery.viewport_class.js</small></h1>
+    <p class="lead"><!--$web_package_description-->jQuery plugin (for responsive design) registers an element to maintain a css class of the viewport when it changes (with optional callback on viewport change)<!--/$web_package_description--></p>
+    <a href="http://www.intheloftstudios.com/packages/jquery/jquery.viewport_class" type="button" class="btn btn-primary" data-web-package="homepage">Download jquery.viewport_class.js</a>
+    <h2>Instructions</h2>
+    <ol>
+      <li>Reize your browser window to see the viewport change callback fire.</li>
+      <li>Inspect the h1 element and notice the class changes to match the viewport.</li>
+    </ol>
+    <hr />
+
+    <h2>Callback Output</h2>
+    <div id="updates"></div>
+
+    <!-- Add your markup for the example here -->
+    <hr />
+    <p class="text-muted">jquery.viewport_class.js is brought to you by <a href="http://www.intheloftstudios.com">In the Loft Studios</a></p>
+  </div>
 </body>
 </html>
