@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Demo of jquery.viewport_class.js</title>
+  <script src="externs/jquery-1.4.4.min.js"></script>
+  <script src="jquery.viewport_class.js"></script>
+  <script>
+  (function($) {
+    $('document').ready(function(){
+      $('h1').viewportClass(function (viewportWidth, viewport, resized) {
+        var output = '';
+        output += '<div>Viewport is now: <span class="info">' + viewport + '</span></div>';
+        output += '<div>ViewportWidth is now: <span class="info">' + viewportWidth + '</span></div>';
+        if (resized !== 0) {
+          output += '<div>Window is getting: <span class="info">' + (resized > 0 ? 'bigger' : 'smaller') + '</span></div>';  
+        }
+        output += '<div>Window Size is: <span class="info">' + $.fn.viewportClass.width + ' x ' + $.fn.viewportClass.height + '</span></div>';
+        $('#updates').html(output);
+      })
+    });
+  })(jQuery);
+  </script>
+  <style type="text/css" media="all">
+    .info {
+      color: red;
+    }
+  </style>
+</head>
+<body>
+  <h1>Demo of jquery.viewport_class.js</h1>
+  <ol><li>Reize your browser window to see the viewport change callback fire.</li>
+    <li>Inspect the h1 element and notice the class changes to match the viewport.</li></ol>
+  
+  <h2>Callback Output</h2>
+  <div id="updates"></div>
+</body>
+</html>
