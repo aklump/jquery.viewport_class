@@ -1,5 +1,5 @@
 /*!
- * Viewport Class jQuery JavaScript Plugin v0.1.5
+ * Viewport Class jQuery JavaScript Plugin v0.1.6
  * http://www.intheloftstudios.com/packages/jquery/jquery.viewport_class
  *
  * jQuery plugin (for responsive design) registers an element to maintain a css class of the viewport when it changes (with optional callback on viewport change)
@@ -29,13 +29,22 @@
  *     it the page load calls this function; then it will be -1 if the resize
  *     happens while the screen is getting smaller, and 1 if the window got
  *     bigger.
- *
+ * @param object breakpoints
+ *   Optional. An object that defines custom breakpoints and classes.
+ *  
  * @code
  *  $('body').viewportClass();
  * @endcode
  *
  * @code
- *  $('body').viewportClass(onViewportChange);
+ *  $('body').viewportClass(onViewportChange, {
+      'mobile-p': 320,
+      'mobile-l': 480,
+      'iphone5-l': 568,
+      'tablet_p': 768,
+      'desktop': 960,
+      'widescreen': 1080,
+    });
  *
  * ...elsewhere in your code...
  *
@@ -51,19 +60,29 @@
 ;(function($, undefined) {
 "use strict";
 
-$.fn.viewportClass = function(callback) {
+$.fn.viewportClass = function(callback, breakpoints) {
 
   var $node         = $(this);
   if ($node.length === 0) {
     return;
   }
 
+  if (typeof breakpoints === 'undefined') {
+    breakpoints = {
+      'mobile-mini': 0,
+      'mobile-portrait': 320,
+      'mobile-landscape': 480,
+      'tablet_portrait': 768,
+      'desktop': 960,
+    }
+  };
+
   var prevViewport, prevWidth, firstRun;
 
   // On first run assign class and callback
   if (!prevViewport) {
     $(window).load(function() {
-      var viewport = $.fn.viewportClass.getViewport();
+      var viewport = $.fn.viewportClass.getViewport(breakpoints);
       applyClass(viewport, 0);
     });
   }
@@ -73,7 +92,7 @@ $.fn.viewportClass = function(callback) {
 
   // On resize apply class
   $(window).bind('resize', function() {
-    var viewport = $.fn.viewportClass.getViewport();
+    var viewport = $.fn.viewportClass.getViewport(breakpoints);
     if (viewport !== prevViewport) {
       applyClass(viewport, (getWidth() > prevWidth ? 1 : -1));
     }
@@ -106,31 +125,25 @@ $.fn.viewportClass = function(callback) {
  *
  * @return string
  */
-$.fn.viewportClass.getViewport = function() {
+$.fn.viewportClass.getViewport = function(breakpoints) {
+
   var data = {
     width: getWidth(),
     height: getHeight()
   };
 
-  if (data.width < 320) {
-    data.viewport = 'mobile-mini';
-  }
-  else if (data.width >= 320 && data.width < 480) {
-    data.viewport = 'mobile-portrait';
-    data.viewportWidth = 320;
-  }
-  else if (data.width >= 480 && data.width < 767) {
-    data.viewport = 'mobile-landscape';
-    data.viewportWidth = 480;
-  }
-  else if (data.width >= 768 && data.width < 959) {
-    data.viewport = 'tablet-portrait';
-    data.viewportWidth = 768;
-  }
-  else if (data.width >= 960) {
-    data.viewport = 'desktop';
-    data.viewportWidth = 960;
-  }
+  var breakpoint = null;
+  for (var i in breakpoints) {
+    if (data.width <= breakpoints[i]) {
+      data.viewport = i;
+      data.viewportWidth = breakpoints[i];
+      break;
+    }
+    // Finally we use the last group.
+    data.viewport = i;
+    data.viewportWidth = breakpoints[i];    
+  };
+
   for (var i in data) {
     $.fn.viewportClass[i] = data[i];
   }
@@ -146,6 +159,6 @@ function getHeight() {
   return $(window).height();
 }
 
-$.fn.viewportClass.version = function() { return '0.1.5'; };
+$.fn.viewportClass.version = function() { return '0.1.6'; };
 
 })(jQuery);
