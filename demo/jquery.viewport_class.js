@@ -1,11 +1,13 @@
-/*!
+/**
  * Viewport Class jQuery JavaScript Plugin v0.1.6
  * http://www.intheloftstudios.com/packages/jquery/jquery.viewport_class
  *
  * jQuery plugin (for responsive design) registers an element to maintain a css class of the viewport when it changes (with optional callback on viewport change)
  *
- * Copyright 2013, Aaron Klump
+ * Copyright 2013, {{ name }}
  * Dual licensed under the MIT or GPL Version 2 licenses.
+ *
+ * Date: Thu Sep 25 16:37:27 PDT 2014
  *
  * There are some global methods/variables available to your other scripts:
  *
@@ -54,11 +56,18 @@
  *   getting bigger or smaller windows.
  * }
  * @endcode
- *
- * Date: Wed, 04 Dec 2013 12:11:48 -0800
+ * 
  */
 ;(function($, undefined) {
 "use strict";
+
+var defaultBreakpoints = {
+  'mobile-mini': 0,
+  'mobile-portrait': 320,
+  'mobile-landscape': 480,
+  'tablet_portrait': 768,
+  'desktop': 960,
+};
 
 $.fn.viewportClass = function(callback, breakpoints) {
 
@@ -68,14 +77,8 @@ $.fn.viewportClass = function(callback, breakpoints) {
   }
 
   if (typeof breakpoints === 'undefined') {
-    breakpoints = {
-      'mobile-mini': 0,
-      'mobile-portrait': 320,
-      'mobile-landscape': 480,
-      'tablet_portrait': 768,
-      'desktop': 960,
-    }
-  };
+    breakpoints = defaultBreakpoints;
+  }
 
   var prevViewport, prevWidth, firstRun;
 
@@ -132,7 +135,10 @@ $.fn.viewportClass.getViewport = function(breakpoints) {
     height: getHeight()
   };
 
-  var breakpoint = null;
+  if (typeof breakpoints === 'undefined') {
+    breakpoints = defaultBreakpoints;
+  }
+
   for (var i in breakpoints) {
     if (data.width <= breakpoints[i]) {
       data.viewport = i;
@@ -141,10 +147,10 @@ $.fn.viewportClass.getViewport = function(breakpoints) {
     }
     // Finally we use the last group.
     data.viewport = i;
-    data.viewportWidth = breakpoints[i];    
-  };
+    data.viewportWidth = breakpoints[i];
+  }
 
-  for (var i in data) {
+  for (i in data) {
     $.fn.viewportClass[i] = data[i];
   }
 

@@ -1,4 +1,4 @@
-/*!
+/**
  * Viewport Class jQuery JavaScript Plugin v0.1.6
  * http://www.intheloftstudios.com/packages/jquery/jquery.viewport_class
  *
@@ -6,6 +6,8 @@
  *
  * Copyright 2013, Aaron Klump
  * Dual licensed under the MIT or GPL Version 2 licenses.
+ *
+ * Date: Thu Sep 25 16:37:27 PDT 2014
  *
  * There are some global methods/variables available to your other scripts:
  *
@@ -54,8 +56,7 @@
  *   getting bigger or smaller windows.
  * }
  * @endcode
- *
- * Date: Wed, 04 Dec 2013 12:11:48 -0800
+ * 
  */
 ;(function($, undefined) {
 "use strict";
@@ -66,7 +67,7 @@ var defaultBreakpoints = {
   'mobile-landscape': 480,
   'tablet_portrait': 768,
   'desktop': 960,
-}
+};
 
 $.fn.viewportClass = function(callback, breakpoints) {
 
@@ -77,7 +78,7 @@ $.fn.viewportClass = function(callback, breakpoints) {
 
   if (typeof breakpoints === 'undefined') {
     breakpoints = defaultBreakpoints;
-  };
+  }
 
   var prevViewport, prevWidth, firstRun;
 
@@ -136,9 +137,8 @@ $.fn.viewportClass.getViewport = function(breakpoints) {
 
   if (typeof breakpoints === 'undefined') {
     breakpoints = defaultBreakpoints;
-  };  
+  }
 
-  var breakpoint = null;
   for (var i in breakpoints) {
     if (data.width <= breakpoints[i]) {
       data.viewport = i;
@@ -147,10 +147,10 @@ $.fn.viewportClass.getViewport = function(breakpoints) {
     }
     // Finally we use the last group.
     data.viewport = i;
-    data.viewportWidth = breakpoints[i];    
-  };
+    data.viewportWidth = breakpoints[i];
+  }
 
-  for (var i in data) {
+  for (i in data) {
     $.fn.viewportClass[i] = data[i];
   }
 
