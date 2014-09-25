@@ -60,6 +60,14 @@
 ;(function($, undefined) {
 "use strict";
 
+var defaultBreakpoints = {
+  'mobile-mini': 0,
+  'mobile-portrait': 320,
+  'mobile-landscape': 480,
+  'tablet_portrait': 768,
+  'desktop': 960,
+}
+
 $.fn.viewportClass = function(callback, breakpoints) {
 
   var $node         = $(this);
@@ -68,13 +76,7 @@ $.fn.viewportClass = function(callback, breakpoints) {
   }
 
   if (typeof breakpoints === 'undefined') {
-    breakpoints = {
-      'mobile-mini': 0,
-      'mobile-portrait': 320,
-      'mobile-landscape': 480,
-      'tablet_portrait': 768,
-      'desktop': 960,
-    }
+    breakpoints = defaultBreakpoints;
   };
 
   var prevViewport, prevWidth, firstRun;
@@ -131,6 +133,10 @@ $.fn.viewportClass.getViewport = function(breakpoints) {
     width: getWidth(),
     height: getHeight()
   };
+
+  if (typeof breakpoints === 'undefined') {
+    breakpoints = defaultBreakpoints;
+  };  
 
   var breakpoint = null;
   for (var i in breakpoints) {
