@@ -1,13 +1,13 @@
 /**
- * Viewport Class jQuery JavaScript Plugin v0.1.6
+ * Viewport Class jQuery JavaScript Plugin v0.1.7
  * http://www.intheloftstudios.com/packages/jquery/jquery.viewport_class
  *
  * jQuery plugin (for responsive design) registers an element to maintain a css class of the viewport when it changes (with optional callback on viewport change)
  *
- * Copyright 2013, {{ name }}
+ * Copyright 2013, Aaron Klump
  * Dual licensed under the MIT or GPL Version 2 licenses.
  *
- * Date: Thu Sep 25 16:37:27 PDT 2014
+ * Date: Thu Sep 25 16:42:35 PDT 2014
  *
  * There are some global methods/variables available to your other scripts:
  *
@@ -165,6 +165,6 @@ function getHeight() {
   return $(window).height();
 }
 
-$.fn.viewportClass.version = function() { return '0.1.6'; };
+$.fn.viewportClass.version = function() { return '0.1.7'; };
 
 })(jQuery);
