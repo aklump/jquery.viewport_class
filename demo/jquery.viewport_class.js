@@ -1,5 +1,5 @@
 /**
- * Viewport Class jQuery JavaScript Plugin v0.1.7
+ * Viewport Class jQuery JavaScript Plugin v0.1.8
  * http://www.intheloftstudios.com/packages/jquery/jquery.viewport_class
  *
  * jQuery plugin (for responsive design) registers an element to maintain a css class of the viewport when it changes (with optional callback on viewport change)
@@ -7,7 +7,7 @@
  * Copyright 2013, Aaron Klump
  * Dual licensed under the MIT or GPL Version 2 licenses.
  *
- * Date: Thu Sep 25 16:42:35 PDT 2014
+ * Date: Wed Oct  8 10:01:49 PDT 2014
  *
  * There are some global methods/variables available to your other scripts:
  *
@@ -58,113 +58,157 @@
  * @endcode
  * 
  */
-;(function($, undefined) {
+;(function($, window, document, undefined) {
 "use strict";
 
-var defaultBreakpoints = {
-  'mobile-mini': 0,
-  'mobile-portrait': 320,
-  'mobile-landscape': 480,
-  'tablet_portrait': 768,
-  'desktop': 960,
-};
+  // The actual plugin constructor
+  function ViewportClass(element, callback, options) {
+    this.element      = element;
+    this.callback     = callback;
+    this.options      = $.extend( {}, $.fn.viewportClass.defaults, options) ;
 
-$.fn.viewportClass = function(callback, breakpoints) {
-
-  var $node         = $(this);
-  if ($node.length === 0) {
-    return;
+    this.prevViewport = null;
+    this.prevWidth    = null;
+    
+    this.init();
   }
 
-  if (typeof breakpoints === 'undefined') {
-    breakpoints = defaultBreakpoints;
-  }
-
-  var prevViewport, prevWidth, firstRun;
-
-  // On first run assign class and callback
-  if (!prevViewport) {
-    $(window).load(function() {
-      var viewport = $.fn.viewportClass.getViewport(breakpoints);
-      applyClass(viewport, 0);
-    });
-  }
-  else {
-    firstRun = false;
-  }
-
-  // On resize apply class
-  $(window).bind('resize', function() {
-    var viewport = $.fn.viewportClass.getViewport(breakpoints);
-    if (viewport !== prevViewport) {
-      applyClass(viewport, (getWidth() > prevWidth ? 1 : -1));
+  /**
+   * Remove/add the correct classes to the element.
+   *
+   * @param  {string} viewport The css class string for the viewport.
+   * @param  {int} resized  -1, 0, 1 (getting bigger)
+   */
+  ViewportClass.prototype.applyClass = function (viewport, resized) {
+    // Removes the old class from the element.
+    $(this.element).removeClass(this.options.cssPrefix + this.prevViewport);
+    if (this.prevViewport !== viewport) {
+      this.prevViewport = viewport;
+      this.prevWidth = getWidth();
     }
-  });
 
-  function applyClass(viewport, resized) {
-    $node.removeClass('viewport-' + prevViewport);
-    if (prevViewport !== viewport) {
-      prevViewport = viewport;
-      prevWidth = getWidth();
+    // Adds the new class to the element.
+    $(this.element).addClass(this.options.cssPrefix + viewport);
+    
+    // Fires callback if provided
+    if (this.callback) {
+      this.callback($.fn.viewportClass.viewportWidth, viewport, resized);
     }
-    $node.addClass('viewport-' + viewport);
-    if (callback) {
-      callback($.fn.viewportClass.viewportWidth, viewport, resized);
-    }
-  }
-
-  return this;
-};
-
-/**
- * Return the current viewport
- *
- * Also calculates/populates the following vars:
- * 
- * - jQuery.fn.viewportClass.viewport
- * - jQuery.fn.viewportClass.viewportWidth
- * - jQuery.fn.viewportClass.width
- * - jQuery.fn.viewportClass.height
- *
- * @return string
- */
-$.fn.viewportClass.getViewport = function(breakpoints) {
-
-  var data = {
-    width: getWidth(),
-    height: getHeight()
   };
 
-  if (typeof breakpoints === 'undefined') {
-    breakpoints = defaultBreakpoints;
-  }
+  ViewportClass.prototype.init = function () {
+    var instance    = this;
+    var viewport;
 
-  for (var i in breakpoints) {
-    if (data.width <= breakpoints[i]) {
+    // On first run assign class and callback
+    if (instance.prevViewport === null) {
+      $(window).load(function() {
+        viewport = $.fn.viewportClass.getViewport(instance.options.breakpoints);
+        instance.applyClass(viewport, 0);
+      });
+    }
+
+    // On resize apply class
+    $(window).bind('resize', function() {
+      viewport = $.fn.viewportClass.getViewport(instance.options.breakpoints);
+      if (viewport !== instance.prevViewport) {
+        var resize = (getWidth() > instance.prevWidth ? 1 : -1);
+        instance.applyClass(viewport, resize);
+      }
+    });
+  };
+
+  $.fn.viewportClass = function(callback, breakpoints) {
+    var options = {};
+    if (typeof breakpoints !== "undefined") {
+      options.breakpoints = breakpoints;
+    }
+
+    return this.each(function () {
+      var vc = new ViewportClass(this, callback, options);
+      $.fn.viewportClass.instances.push(vc);
+    });
+  };
+
+  $.fn.viewportClass.defaults = {
+    "breakpoints" : {
+      "mobile-mini": 240,
+      "mobile-portrait": 320,
+      "mobile-landscape": 480,
+      "tablet_portrait": 768,
+      "desktop": 960,
+    },
+    
+    // A prefix for all css classes
+    "cssPrefix" : 'viewport-'
+  };
+
+  /**
+   * Contains the instances of ViewportClass objects.
+   *
+   * @type {Array}
+   */
+  $.fn.viewportClass.instances = [];
+
+  /**
+   * Return the current viewport
+   *
+   * Also calculates/populates the following vars:
+   * 
+   * - jQuery.fn.viewportClass.viewport
+   * - jQuery.fn.viewportClass.viewportWidth
+   * - jQuery.fn.viewportClass.width
+   * - jQuery.fn.viewportClass.height
+   *
+   * @return string
+   */
+  $.fn.viewportClass.getViewport = function(breakpoints) {
+
+    var data = {
+      width: getWidth(),
+      height: getHeight()
+    };
+
+    if (typeof breakpoints === 'undefined') {
+      breakpoints = $.fn.viewportClass.defaults.breakpoints;
+    }
+
+    for (var i in breakpoints) {
+      if (data.width <= breakpoints[i]) {
+        data.viewport = i;
+        data.viewportWidth = breakpoints[i];
+        break;
+      }
+      // Finally we use the last group.
       data.viewport = i;
       data.viewportWidth = breakpoints[i];
-      break;
     }
-    // Finally we use the last group.
-    data.viewport = i;
-    data.viewportWidth = breakpoints[i];
+
+    for (i in data) {
+      $.fn.viewportClass[i] = data[i];
+    }
+
+    return data.viewport;
+  };
+
+  /**
+   * Returns the current window width in pixels.
+   *
+   * @return {int}
+   */
+  function getWidth() {
+    return $(window).width();
   }
 
-  for (i in data) {
-    $.fn.viewportClass[i] = data[i];
+  /**
+   * Returns the current window height in pixels.
+   *
+   * @return {int}
+   */
+  function getHeight() {
+    return $(window).height();
   }
 
-  return data.viewport;
-};
+  $.fn.viewportClass.version = function() { return '0.1.8'; };
 
-function getWidth() {
-  return $(window).width();
-}
-
-function getHeight() {
-  return $(window).height();
-}
-
-$.fn.viewportClass.version = function() { return '0.1.7'; };
-
-})(jQuery);
+})(jQuery, window, document);
