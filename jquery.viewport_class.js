@@ -7,8 +7,11 @@
  * Copyright 2013, Aaron Klump
  * Dual licensed under the MIT or GPL Version 2 licenses.
  *
- * Date: Thu Oct 23 06:49:12 PDT 2014
+ * Date: Tue Dec  9 14:47:22 PST 2014
  *
+ * @license
+ */
+/**
  * There are some global methods/variables available to your other scripts:
  *
  *   - jQuery.fn.viewportClass.getViewport()
@@ -56,7 +59,6 @@
  *   getting bigger or smaller windows.
  * }
  * @endcode
- * 
  */
 ;(function($, window, document, undefined) {
 "use strict";
