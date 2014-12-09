@@ -7,7 +7,7 @@
  * Copyright 2013, Aaron Klump
  * Dual licensed under the MIT or GPL Version 2 licenses.
  *
- * Date: Tue Dec  9 14:48:12 PST 2014
+ * Date: Tue Dec  9 14:59:05 PST 2014
  *
  * @license
  */
@@ -20,10 +20,10 @@
  * jQuery.fn.viewportClass.getViewport() in case you need to back reference
  * them after the environment has changed.
  *
- *   - jQuery.fn.viewportClass.viewport: viewport name
- *   - jQuery.fn.viewportClass.viewportWidth: width of current viewport
- *   - jQuery.fn.viewportClass.width: The window actual width
- *   - jQuery.fn.viewportClass.height: the window actual height
+ *   - jQuery.fn.viewportClass.data.viewport: viewport name
+ *   - jQuery.fn.viewportClass.data.viewportWidth: width of current viewport
+ *   - jQuery.fn.viewportClass.data.width: The window actual width
+ *   - jQuery.fn.viewportClass.data.height: the window actual height
  *
  * @param function callback
  *   A function to be called each time the body class changes. It receives the
@@ -186,8 +186,9 @@
       data.viewportWidth = breakpoints[i];
     }
 
+    $.fn.viewportClass.data = {};
     for (i in data) {
-      $.fn.viewportClass[i] = data[i];
+      $.fn.viewportClass.data[i] = data[i];
     }
 
     return data.viewport;
