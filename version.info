@@ -1,5 +1,5 @@
 name = "Viewport Class"
 description = "jQuery plugin (for responsive design) registers an element to maintain a css class of the viewport when it changes (with optional callback on viewport change)"
-version = "0.1.10"
+version = "0.1.11"
 homepage = http://www.intheloftstudios.com/packages/jquery/jquery.viewport_class
 author = Aaron Klump <sourcecode@intheloftstudios.com>
