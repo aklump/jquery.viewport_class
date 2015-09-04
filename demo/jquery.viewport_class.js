@@ -7,7 +7,7 @@
  * Copyright 2013, Aaron Klump
  * Dual licensed under the MIT or GPL Version 2 licenses.
  *
- * Date: Tue Dec  9 15:10:43 PST 2014
+ * Date: Fri Sep  4 16:31:41 PDT 2015
  *
  * @license
  */
@@ -35,7 +35,9 @@
  *     happens while the screen is getting smaller, and 1 if the window got
  *     bigger.
  * @param object breakpoints
- *   Optional. An object that defines custom breakpoints and classes.
+ *   Optional. An object that defines custom breakpoints and classes.  Each
+ *   element should be a breakpoint name and the max width for that breakpoint.
+ *   THE MAX WIDTH ON THE FINAL BREAKPOINT SHOULD BE SET TO NULL.
  *  
  * @code
  *  $('body').viewportClass();
@@ -94,7 +96,7 @@
     
     // Fires callback if provided
     if (this.callback) {
-      this.callback($.fn.viewportClass.viewportWidth, viewport, resized);
+      this.callback($.fn.viewportClass.data.viewportWidth, viewport, resized);
     }
   };
 
@@ -127,8 +129,8 @@
     });
   };
 
-  $.fn.viewportClass = function(callback, breakpoints) {
-    var options = {};
+  $.fn.viewportClass = function(callback, breakpoints, options) {
+    options = options || {};
     if (typeof breakpoints !== "undefined") {
       options.breakpoints = breakpoints;
     }
@@ -144,8 +146,8 @@
       "mobile-mini": 240,
       "mobile-portrait": 320,
       "mobile-landscape": 480,
-      "tablet_portrait": 768,
-      "desktop": 960,
+      "tablet-portrait": 768,
+      "desktop": null
     },
     
     // A prefix for all css classes
