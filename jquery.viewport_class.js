@@ -1,5 +1,5 @@
 /**
- * Viewport Class jQuery JavaScript Plugin v0.1.13
+ * Viewport Class jQuery JavaScript Plugin v1.0
  * http://www.intheloftstudios.com/packages/jquery/jquery.viewport_class
  *
  * jQuery plugin (for responsive design) registers an element to maintain a css class of the viewport when it changes (with optional callback on viewport change)
@@ -7,7 +7,7 @@
  * Copyright 2013, Aaron Klump
  * Dual licensed under the MIT or GPL Version 2 licenses.
  *
- * Date: Fri Sep  4 16:32:12 PDT 2015
+ * Date: Mon Sep  7 06:48:44 PDT 2015
  *
  * @license
  */
@@ -25,33 +25,43 @@
  *   - jQuery.fn.viewportClass.data.width: The window actual width
  *   - jQuery.fn.viewportClass.data.height: the window actual height
  *
- * @param function callback
- *   A function to be called each time the body class changes. It receives the
- *   following parameters:
+ * @param object|function callback
+ *   If an object you omit the second param, and you use this first as the 
+ *   options parameter.
+ *   
+ *   But for convenience you can pass a function to be called each time the 
+ *   body class changes. It receives the following parameters:
  *   - (int) viewportWidth: The pixel width of the design window, e.g. 320
  *   - (string) viewport: The name of the viewport, e.g. mobile-landscape
  *   - (bool) resized: This will be false the first time callback is called, as
  *     it the page load calls this function; then it will be -1 if the resize
  *     happens while the screen is getting smaller, and 1 if the window got
  *     bigger.
- * @param object breakpoints
- *   Optional. An object that defines custom breakpoints and classes.  Each
- *   element should be a breakpoint name and the max width for that breakpoint.
- *   THE MAX WIDTH ON THE FINAL BREAKPOINT SHOULD BE SET TO NULL.
+ * @param {object} options Optional. See $.fn.viewportClass.defaults
  *  
  * @code
  *  $('body').viewportClass();
  * @endcode
  *
  * @code
- *  $('body').viewportClass(onViewportChange, {
-      'mobile-p': 320,
-      'mobile-l': 480,
-      'iphone5-l': 568,
-      'tablet_p': 768,
-      'desktop': 960,
-      'widescreen': 1080,
-    });
+ *  $('body').viewportClass(onViewportChange, {cssPrefix: 'vp-'});
+ * @endcode
+ *
+ * @code
+ *  $('body').viewportClass({
+ *    callback: onViewportChange,
+ *    breakpoints: {
+ *      mobile-p: 320,
+ *      mobile-l: 480,
+ *      iphone5-l: 568,
+ *      tablet_p: 768,
+ *      desktop: 960,
+ *      widescreen: 1080,
+ *    },
+ *    onReady: function () {
+ *      alert("I'm ready")
+ *    }
+ *  });
  *
  * ...elsewhere in your code...
  *
@@ -66,14 +76,13 @@
 "use strict";
 
   // The actual plugin constructor
-  function ViewportClass(element, callback, options) {
-    this.element      = element;
-    this.callback     = callback;
+  function ViewportClass(element, options) {
+    this.el           = element;
+    this.$el          = $(element);
     this.options      = $.extend( {}, $.fn.viewportClass.defaults, options) ;
-
+    this.callback     = options.callback;
     this.prevViewport = null;
     this.prevWidth    = null;
-    
     this.init();
   }
 
@@ -85,14 +94,14 @@
    */
   ViewportClass.prototype.applyClass = function (viewport, resized) {
     // Removes the old class from the element.
-    $(this.element).removeClass(this.options.cssPrefix + this.prevViewport);
+    this.$el.removeClass(this.options.cssPrefix + this.prevViewport);
     if (this.prevViewport !== viewport) {
       this.prevViewport = viewport;
       this.prevWidth = getWidth();
     }
 
     // Adds the new class to the element.
-    $(this.element).addClass(this.options.cssPrefix + viewport);
+    this.$el.addClass(this.options.cssPrefix + viewport);
     
     // Fires callback if provided
     if (this.callback) {
@@ -116,6 +125,9 @@
       $(window).load(function() {
         viewport = $.fn.viewportClass.getViewport(instance.options.breakpoints);
         instance.applyClass(viewport, 0);
+        if ($.isFunction(instance.options.onReady)) {
+          instance.options.onReady(viewport, instance);
+        }
       });
     }
 
@@ -129,19 +141,34 @@
     });
   };
 
-  $.fn.viewportClass = function(callback, breakpoints, options) {
-    options = options || {};
-    if (typeof breakpoints !== "undefined") {
-      options.breakpoints = breakpoints;
+  $.fn.viewportClass = function(callback, options) {
+    
+    // Allow passing just an object instead of null, {...}
+    if (typeof callback === 'object' && typeof options === 'undefined') {
+      options  = callback;
+      callback = null;
     }
 
+    options.callback = callback;
+
     return this.each(function () {
-      var vc = new ViewportClass(this, callback, options);
+      var vc = new ViewportClass(this, options);
       $.fn.viewportClass.instances.push(vc);
     });
   };
 
   $.fn.viewportClass.defaults = {
+    // A function to call when element has been made ready.  It will 
+    // receive these args: viewport, instance
+    "onReady": null,
+
+    // A function to call when the viewport changes breakpoints.
+    "callback": null,
+
+    // An object that defines custom breakpoints and classes.  Each
+    // element should be a breakpoint name and the max width for that
+    // breakpoint. THE MAX WIDTH ON THE FINAL BREAKPOINT SHOULD BE SET TO
+    // NULL.
     "breakpoints" : {
       "mobile-mini": 240,
       "mobile-portrait": 320,
@@ -222,6 +249,6 @@
     return $(window).height();
   }
 
-  $.fn.viewportClass.version = function() { return '0.1.13'; };
+  $.fn.viewportClass.version = function() { return '1.0'; };
 
 })(jQuery, window, document);

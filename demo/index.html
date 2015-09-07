@@ -25,6 +25,16 @@
         }
         output += '<div>Window Size is: <span class="info">' + $.fn.viewportClass.data.width + ' x ' + $.fn.viewportClass.data.height + '</span></div>';
         $('#updates').html(output);
+      }, {
+        onReady: function () {
+          $('#updates').before('<div>onReady callback fired!</div>');
+        }
+      });
+
+      $('body').viewportClass({
+        onReady: function () {
+          $('#updates').before('<div>Second onReady callback fired!</div>');
+        }
       });
     });
   })(jQuery);
