@@ -7,7 +7,7 @@
  * Copyright 2013, Aaron Klump
  * Dual licensed under the MIT or GPL Version 2 licenses.
  *
- * Date: Mon Sep  7 06:48:44 PDT 2015
+ * Date: Mon Sep  7 06:51:54 PDT 2015
  *
  * @license
  */
@@ -80,7 +80,7 @@
     this.el           = element;
     this.$el          = $(element);
     this.options      = $.extend( {}, $.fn.viewportClass.defaults, options) ;
-    this.callback     = options.callback;
+    this.callback     = this.options.callback;
     this.prevViewport = null;
     this.prevWidth    = null;
     this.init();
