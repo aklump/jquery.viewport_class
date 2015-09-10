@@ -7,7 +7,7 @@
  * Copyright 2013, Aaron Klump
  * Dual licensed under the MIT or GPL Version 2 licenses.
  *
- * Date: Mon Sep  7 07:08:23 PDT 2015
+ * Date: Thu Sep 10 15:57:16 PDT 2015
  *
  * @license
  */
@@ -239,7 +239,12 @@
    * @return {int}
    */
   function getWidth() {
-    return $(window).width();
+    var e = window, a = 'inner';
+    if (!('innerWidth' in window )) {
+        a = 'client';
+        e = document.documentElement || document.body;
+    }
+    return e[ a+'Width' ];
   }
 
   /**
