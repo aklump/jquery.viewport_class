@@ -9,14 +9,16 @@
  */
 
 //Here is the header required to use this script...
+// Additional comments should come AFTER the date line.
+
 /**
  * {{ name }} jQuery JavaScript Plugin v{{ version }}
  * {{ homepage }}
  *
  * {{ description }}.
  *
- * Copyright 2013, {{ name }}
- * Dual licensed under the MIT or GPL Version 2 licenses.
+ * Copyright 2013, {{ author }}
+ * @license Dual licensed under the MIT or GPL Version 2 licenses.
  *
  * Date: {{ date }}
  */
@@ -40,6 +42,11 @@ list(
 $source_file = $path_to_root . '/jquery.viewport_class.js';
 $source = file_get_contents($source_file);
 
+// We're expected an initial comment block for the file.
+if (substr($source, 0, 3) !== '/**') {
+  throw new Exception("Unable to parse $source_file; file must begin with /**", 1);
+}
+
 // Pull out only comment lines for manipulation to protect code.
 preg_match_all("/(\/\*\*).+?(\*\/)/s", $source, $matches);
 $find = $matches[0][0];
@@ -49,6 +56,7 @@ $comment_lines_replace = explode(PHP_EOL, $matches[0][0]);
 js_replace_name_version($comment_lines_replace[1], $package_name, $new_version);
 js_replace_homepage($comment_lines_replace[2], $homepage);
 js_replace_description($comment_lines_replace[4], $description);
+js_replace_copyright($comment_lines_replace[6], $author);
 js_replace_date($comment_lines_replace[9], $date);
 
 // Replace the old comment block with new one.

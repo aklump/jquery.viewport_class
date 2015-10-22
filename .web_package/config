@@ -7,5 +7,5 @@ push_develop = auto
 push_master = auto
 init_version = 0.0.1
 micro_prefix = .
-pause = 5
+pause = 2
 author = "Aaron Klump <sourcecode@intheloftstudios.com>"

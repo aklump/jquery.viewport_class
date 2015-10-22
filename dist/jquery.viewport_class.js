@@ -4,10 +4,10 @@
  *
  * jQuery plugin (for responsive design) registers an element to maintain a css class of the viewport when it changes (with optional callback on viewport change)
  *
- * Copyright 2013, Aaron Klump
+ * Copyright 2013-2015, Aaron Klump <sourcecode@intheloftstudios.com>
  * Dual licensed under the MIT or GPL Version 2 licenses.
  *
- * Date: Thu Oct 22 09:20:41 PDT 2015
+ * Date: Thu Oct 22 09:26:16 PDT 2015
  *
  * @license
  */
